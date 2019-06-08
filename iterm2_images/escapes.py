@@ -94,6 +94,25 @@ class ImageEsc(FileEsc):
     height: ImageDim = field(default_factory=ImageDim)
     preserve_aspect_ratio: bool = True
 
+    @classmethod
+    # pylint: disable=redefined-builtin
+    def from_pil(cls, image, format='png', **params):
+        """Creates a new :class:`ImageEsc` containing a compressed image, saved
+        to it by Pillow. It is PNG format by default. Arguments which you would
+        give to :meth:`Image.save` can be given here.
+
+        To go in the reverse direction, to create a Pillow image object from an
+        :class:`ImageEsc`, do: ``Image.open(image_esc.file)``.
+        """
+        fp = io.BytesIO()
+        image.save(fp, format, **params)
+        path = Path(image.filename)
+        name = path.parts[-1] if path.parts else None
+        w, h = image.size
+        return cls(fp.getvalue(), name,
+                   ImageDim(w, ImageLenUnit.PIXELS),
+                   ImageDim(h, ImageLenUnit.PIXELS))
+
     def write(self, b=sys.stdout.buffer):
         args = {}
         if self.name is not None:
