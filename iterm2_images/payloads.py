@@ -107,9 +107,12 @@ class ImageEsc(FileEsc):
         """
         fp = io.BytesIO()
         image.save(fp, format, **params)
-        path = Path(image.filename)
-        name = path.parts[-1] if path.parts else None
         w, h = image.size
+        try:
+            path = Path(image.filename)
+            name = path.parts[-1]
+        except (AttributeError, IndexError):
+            name = None
         return cls(fp.getvalue(), name,
                    ImageDim(w, ImageLenUnit.PIXELS),
                    ImageDim(h, ImageLenUnit.PIXELS))
