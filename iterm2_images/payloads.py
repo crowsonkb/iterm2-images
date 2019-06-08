@@ -60,6 +60,7 @@ class FileEsc:
             args['name'] = b64encode(self.name.encode()).decode()
         args['size'] = len(self.data)
         self._write_args(b, args)
+        return self
 
 
 class ImageLenUnit(Enum):
@@ -123,3 +124,4 @@ class ImageEsc(FileEsc):
         args['preserveAspectRatio'] = int(self.preserve_aspect_ratio)
         args['inline'] = 1
         self._write_args(b, args)
+        return self
