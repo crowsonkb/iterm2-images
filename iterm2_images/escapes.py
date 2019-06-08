@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 from typing import ByteString, Optional
 
-__all__ = ['FileEsc', 'ImageSizeUnit', 'ImageDim', 'ImageEsc']
+__all__ = ['FileEsc', 'ImageLenUnit', 'ImageDim', 'ImageEsc']
 
 
 @dataclass
@@ -52,7 +52,7 @@ class FileEsc:
         self._write_args(b, args)
 
 
-class ImageSizeUnit(Enum):
+class ImageLenUnit(Enum):
     """Represents units of measure of inline image size."""
     CELLS = ''
     PIXELS = 'px'
@@ -64,10 +64,10 @@ class ImageSizeUnit(Enum):
 class ImageDim:
     """Represents inline image sizes as a quantity with a unit of measure."""
     quantity: float = 0
-    unit: ImageSizeUnit = ImageSizeUnit.AUTO
+    unit: ImageLenUnit = ImageLenUnit.AUTO
 
     def __str__(self):
-        if self.unit == ImageSizeUnit.AUTO:
+        if self.unit == ImageLenUnit.AUTO:
             return self.unit.value
         return '{!s}{!s}'.format(self.quantity, self.unit.value)
 
