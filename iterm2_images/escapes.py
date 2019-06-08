@@ -1,6 +1,7 @@
 """Inline images and file transfers for iTerm2."""
 
 from base64 import b64encode
+import copy
 from dataclasses import dataclass, field
 from enum import Enum
 import io
@@ -28,6 +29,10 @@ class FileEsc:
         path = Path(path)
         name = path.parts[-1] if path.parts else None
         return cls(path.read_bytes(), name)
+
+    def copy(self):
+        """Returns a copy of the object."""
+        return copy.deepcopy(self)
 
     @property
     def file(self):
