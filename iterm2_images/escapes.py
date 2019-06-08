@@ -21,7 +21,10 @@ class FileEsc:
         if isinstance(self.data, ByteString):
             return
         if isinstance(self.data, Path):
-            self.data = self.data.read_bytes()
+            actual_data = self.data.read_bytes()
+            if not self.name:
+                self.name = self.data.parts[-1]
+            self.data = actual_data
 
     @classmethod
     def _get_binary_stream(cls, b):
