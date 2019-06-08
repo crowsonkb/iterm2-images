@@ -23,6 +23,8 @@ class FileEsc:
 
     @classmethod
     def open(cls, path):
+        """Open a file, read it into memory, and prepare to generate escape
+        sequences which encode it."""
         path = Path(path)
         name = path.parts[-1] if path.parts else None
         return cls(path.read_bytes(), name)
