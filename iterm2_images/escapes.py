@@ -18,13 +18,19 @@ class FileEsc:
     name: Optional[str] = None
 
     def __post_init__(self):
-        if isinstance(self.data, ByteString):
-            return
-        if isinstance(self.data, Path):
-            actual_data = self.data.read_bytes()
-            if not self.name:
-                self.name = self.data.parts[-1]
-            self.data = actual_data
+        if not isinstance(self.data, ByteString):
+            raise TypeError("'data' field must be a bytes-like object")
+
+    @classmethod
+    def open(cls, path):
+        path = Path(path)
+        name = path.parts[-1] if path.parts else None
+        return cls(path.read_bytes(), name)
+
+    @property
+    def file(self):
+        """Gets a new binary stream copy of the object's :attr:`data` field."""
+        return io.BytesIO(self.data)
 
     @classmethod
     def _get_binary_stream(cls, b):
@@ -33,7 +39,7 @@ class FileEsc:
         if hasattr(b, 'buffer'):
             return cls._get_binary_stream(b.buffer)
         msg = '{} is not a binary stream nor is it convertible to one'
-        raise ValueError(msg.format(type(b).__name__))
+        raise TypeError(msg.format(type(b).__name__))
 
     def _write_args(self, b, args):
         b = self._get_binary_stream(b)
@@ -44,7 +50,8 @@ class FileEsc:
         b.flush()
 
     def write(self, b=sys.stdout.buffer):
-        """Writes the escape sequences to a binary file-like object."""
+        """Writes the escape sequences to a binary stream (by default
+        `sys.stdout.buffer`)."""
         args = {}
         if self.name is not None:
             args['name'] = b64encode(self.name.encode()).decode()
@@ -79,12 +86,7 @@ class ImageEsc(FileEsc):
     height: ImageDim = field(default_factory=ImageDim)
     preserve_aspect_ratio: bool = True
 
-    # TODO: fix this to accept multiple formats of data
-    # def __post_init__(self):
-    #     super().__post_init__()
-
     def write(self, b=sys.stdout.buffer):
-        """Writes the escape sequences to a binary file-like object."""
         args = {}
         if self.name is not None:
             args['name'] = b64encode(self.name.encode()).decode()
