@@ -5,7 +5,7 @@
 import click
 import click_pathlib
 
-from .escapes import ImageDim, ImageEsc, ImageLenUnit
+from .payloads import ImageDim, ImageEsc, ImageLenUnit
 
 units = [x.name for x in ImageLenUnit]
 
@@ -21,7 +21,7 @@ units = [x.name for x in ImageLenUnit]
 @click.option('--preserve-aspect-ratio', type=bool, default=True)
 def main(image, x_val, x_unit, y_val, y_unit, preserve_aspect_ratio):
     """The main function."""
-    esc = ImageEsc(image)
+    esc = ImageEsc.open(image)
     esc.width = ImageDim(x_val, ImageLenUnit[x_unit.upper()])
     esc.height = ImageDim(y_val, ImageLenUnit[y_unit.upper()])
     esc.preserve_aspect_ratio = preserve_aspect_ratio
