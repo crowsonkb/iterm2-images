@@ -76,14 +76,15 @@ class ImageLenUnit(Enum):
 
 @dataclass
 class ImageDim:
-    """Represents inline image sizes as a quantity with a unit of measure."""
-    quantity: float = 0
+    """Represents inline image sizes as a quantity (a pair of a numerical value
+    with a unit of measure)."""
+    value: float = 0
     unit: ImageLenUnit = ImageLenUnit.AUTO
 
     def __str__(self):
         if self.unit == ImageLenUnit.AUTO:
             return self.unit.value
-        return '{!s}{!s}'.format(self.quantity, self.unit.value)
+        return '{!s}{!s}'.format(self.value, self.unit.value)
 
 
 @dataclass
