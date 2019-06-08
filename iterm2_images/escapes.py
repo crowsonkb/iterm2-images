@@ -25,7 +25,7 @@ class FileEsc:
     @classmethod
     def open(cls, path):
         """Open a file, read it into memory, and prepare to generate escape
-        sequences which encode it."""
+        sequences which encode its contents."""
         path = Path(path)
         name = path.parts[-1] if path.parts else None
         return cls(path.read_bytes(), name)
@@ -89,7 +89,7 @@ class ImageDim:
 
 @dataclass
 class ImageEsc(FileEsc):
-    """Generates escape sequences for an inline image."""
+    """Generates escape sequences which encode the contents of an image."""
     width: ImageDim = field(default_factory=ImageDim)
     height: ImageDim = field(default_factory=ImageDim)
     preserve_aspect_ratio: bool = True
