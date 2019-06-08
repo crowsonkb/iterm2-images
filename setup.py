@@ -22,6 +22,7 @@ setup(
     entry_points={
         'console_scripts': [
             'iidisplay=iterm2_images.display_cli:main',
+            'iitransfer=iterm2_images.transfer_cli:main',
         ],
     },
 )
