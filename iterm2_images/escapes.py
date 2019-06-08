@@ -30,10 +30,6 @@ class FileEsc:
         name = path.parts[-1] if path.parts else None
         return cls(path.read_bytes(), name)
 
-    def copy(self):
-        """Returns a copy of the object."""
-        return copy.deepcopy(self)
-
     @property
     def file(self):
         """Gets a new binary stream copy of the object's :attr:`data` field."""
@@ -93,6 +89,10 @@ class ImageEsc(FileEsc):
     width: ImageDim = field(default_factory=ImageDim)
     height: ImageDim = field(default_factory=ImageDim)
     preserve_aspect_ratio: bool = True
+
+    def copy(self):
+        """Returns a copy of the object."""
+        return copy.deepcopy(self)
 
     @classmethod
     # pylint: disable=redefined-builtin
