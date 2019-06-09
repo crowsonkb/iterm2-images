@@ -156,9 +156,6 @@ class ImageEsc(FileEsc):
         if 'numpy' not in sys.modules:
             raise ImportError('numpy is not imported')
 
-        if not np.issubdtype(arr.dtype, np.uint8):
-            raise ValueError('Array dtype must be uint8 (range 0-255)')
-
         if arr.ndim not in (2, 3):
             raise ValueError('Array must be 2 or 3 dimensional')
 
@@ -171,6 +168,13 @@ class ImageEsc(FileEsc):
             elif arr.shape[-1] > 4:
                 msg = 'Number of channels (last dimension) must be 1-4'
                 raise ValueError(msg)
+
+        if np.issubdtype(arr.dtype, np.floating):
+            arr = np.uint8(np.round(np.clip(arr, 0, 1) * 255))
+
+        if not np.issubdtype(arr.dtype, np.uint8):
+            raise ValueError('Array dtype must be uint8 (range 0-255) '
+                             'or float[16, 32, 64, 128] (range 0-1)')
 
         save_params = {} if save_params is None else save_params
         return cls.from_pil(Image.fromarray(arr), **save_params)
