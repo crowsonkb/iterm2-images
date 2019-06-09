@@ -195,11 +195,7 @@ class ImageEsc(FileEsc):
         return self
 
     def __itruediv__(self, other):
-        if not isinstance(other, (int, float)):
-            return NotImplemented
-        self.width.value /= other
-        self.height.value /= other
-        return self
+        return self.__imul__(1 / other)
 
     def __mul__(self, other):
         return self.copy().__imul__(other)
