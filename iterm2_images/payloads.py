@@ -102,7 +102,7 @@ class ImageEsc(FileEsc):
         """Returns a copy of the object."""
         return copy.deepcopy(self)
 
-    def detect_size(self, retina=True):
+    def detect_size(self, *, retina=True):
         """Sets the image's displayed size in pixels to its true pixel count."""
         scale = 2 if retina else 1
         w, h = Image.open(self.file).size
@@ -112,7 +112,7 @@ class ImageEsc(FileEsc):
 
     @classmethod
     # pylint: disable=redefined-builtin
-    def from_pil(cls, image, format='png', **params):
+    def from_pil(cls, image, *, format='png', **params):
         """Creates a new :class:`ImageEsc` containing a compressed image, saved
         to it by Pillow. It is PNG format by default. Arguments which you would
         give to :meth:`PIL.Image.save` can be given here.
