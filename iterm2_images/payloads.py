@@ -138,3 +138,26 @@ class ImageEsc(FileEsc):
         args['inline'] = 1
         self._write_args(b, args)
         return self
+
+    def __imul__(self, other):
+        if not isinstance(other, (int, float)):
+            return NotImplemented
+        self.width.value *= other
+        self.height.value *= other
+        return self
+
+    def __itruediv__(self, other):
+        if not isinstance(other, (int, float)):
+            return NotImplemented
+        self.width.value /= other
+        self.height.value /= other
+        return self
+
+    def __mul__(self, other):
+        return self.copy().__imul__(other)
+
+    def __truediv__(self, other):
+        return self.copy().__itruediv__(other)
+
+    def __rmul__(self, other):
+        return self * other
