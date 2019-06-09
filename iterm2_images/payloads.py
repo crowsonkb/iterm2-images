@@ -135,10 +135,10 @@ class ImageEsc(FileEsc):
     @classmethod
     def from_numpy(cls, arr, *, save_params=None):
         """Creates a new :class:`ImageEsc` containing an image from a NumPy
-        array, saved to it by :meth:`from_pil` or the save function of your
-        choice. By default it creates PNG format images; if you want to
-        customize this, items in the `save_params` dict will be passed on to
-        :meth:`from_pil` and thus to :meth:`PIL.Image.save`.
+        array, saved to it by Pillow (via :meth:`from_pil`). By default it
+        creates PNG format images; if you want to customize this, items in the
+        `save_params` dict will be passed on to :meth:`from_pil` and thus to
+        :meth:`PIL.Image.save`.
 
         Allowed array shapes and data types:
 
