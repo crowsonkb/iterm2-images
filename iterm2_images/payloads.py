@@ -162,6 +162,9 @@ class ImageEsc(FileEsc):
         if arr.ndim not in (2, 3):
             raise ValueError('Array must be 2 or 3 dimensional')
 
+        if not all(arr.shape):
+            raise ValueError('All array dimensions must be nonzero')
+
         if arr.ndim == 3:
             if arr.shape[-1] == 1:
                 arr = arr[:, :, 0]
