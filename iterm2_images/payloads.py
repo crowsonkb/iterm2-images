@@ -190,6 +190,8 @@ class ImageEsc(FileEsc):
     def __imul__(self, other):
         if not isinstance(other, (int, float)):
             return NotImplemented
+        if other < 0:
+            raise ValueError('Cannot multiply or divide by a negative number')
         self.width.value *= other
         self.height.value *= other
         return self
