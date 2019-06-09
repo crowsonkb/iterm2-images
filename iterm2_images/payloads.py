@@ -9,6 +9,8 @@ from pathlib import Path
 import sys
 from typing import ByteString, Optional
 
+from PIL import Image
+
 __all__ = ['FileEsc', 'ImageLenUnit', 'ImageDim', 'ImageEsc']
 
 
@@ -95,6 +97,14 @@ class ImageEsc(FileEsc):
         """Returns a copy of the object."""
         return copy.deepcopy(self)
 
+    def detect_size(self, retina=True):
+        """Sets the image's displayed size in pixels to its true pixel count."""
+        scale = 2 if retina else 1
+        w, h = Image.open(self.file).size
+        self.width = ImageDim(w / scale, ImageLenUnit.PIXELS)
+        self.height = ImageDim(h / scale, ImageLenUnit.PIXELS)
+        return self
+
     @classmethod
     # pylint: disable=redefined-builtin
     def from_pil(cls, image, format='png', **params):
@@ -114,8 +124,8 @@ class ImageEsc(FileEsc):
         except (AttributeError, IndexError):
             name = None
         return cls(fp.getvalue(), name,
-                   ImageDim(w, ImageLenUnit.PIXELS),
-                   ImageDim(h, ImageLenUnit.PIXELS))
+                   ImageDim(w / 2, ImageLenUnit.PIXELS),
+                   ImageDim(h / 2, ImageLenUnit.PIXELS))
 
     def write(self, b=sys.stdout.buffer):
         args = {}
