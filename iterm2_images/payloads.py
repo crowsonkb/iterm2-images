@@ -169,7 +169,7 @@ class ImageEsc(FileEsc):
                 msg = 'Number of channels (last dimension) must be 1-4'
                 raise ValueError(msg)
 
-        save_params = {} if save_params else save_params
+        save_params = {} if save_params is None else save_params
         return cls.from_pil(Image.fromarray(arr), **save_params)
 
     def write(self, b=sys.stdout.buffer):
