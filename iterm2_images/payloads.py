@@ -9,6 +9,11 @@ from pathlib import Path
 import sys
 from typing import ByteString, Optional
 
+try:
+    import numpy as np
+except ImportError:
+    pass
+
 from PIL import Image
 
 __all__ = ['FileEsc', 'ImageLenUnit', 'ImageDim', 'ImageEsc']
@@ -126,6 +131,51 @@ class ImageEsc(FileEsc):
         return cls(fp.getvalue(), name,
                    ImageDim(w / 2, ImageLenUnit.PIXELS),
                    ImageDim(h / 2, ImageLenUnit.PIXELS))
+
+    @classmethod
+    def from_numpy(cls, arr, save_fn=None):
+        """Creates a new :class:`ImageEsc` containing an image from a NumPy
+        array, saved to it by :meth:`from_pil` or the save function of your
+        choice. By default it creates PNG format images; if you want to
+        customize this, use :func:`functools.partial` from the standard library
+        to 'customize' an existing save function thusly:
+
+        Example:
+
+            ImageEsc.from_numpy(arr, save_fn=partial(ImageEsc.from_pil,
+                                                     format='jpeg', quality=90))
+
+        Allowed array shapes and data types:
+
+            * Arrays must have dtype `np.uint8`. The range of values is 0–255.
+
+            * Arrays must either be 2D or 3D. 2D arrays correspond to grayscale
+                images, and (most) 3D arrays to color.
+
+            * 3D arrays must follow the dimension order HWC (channels last).
+
+            * 3D arrays may have 1 to 4 channels. 3D arrays with 1 channel are
+                grayscale; with 2 channels, grayscale with alpha; with 3
+                channels, RGB; with 4 channels, RGB with alpha.
+        """
+        if 'numpy' not in sys.modules:
+            raise ImportError('numpy is not imported')
+
+        if not np.issubdtype(arr.dtype, np.uint8):
+            raise ValueError('Array dtype must be uint8 (range 0-255)')
+
+        if arr.ndim not in (2, 3):
+            raise ValueError('Array must be 2 or 3 dimensional')
+
+        if arr.ndim == 3:
+            if arr.shape[-1] == 1:
+                arr = arr[:, :, 0]
+            elif arr.shape[-1] > 4:
+                raise ValueError('Number of channels (last dimension) must be 1-4')
+
+        if save_fn is None:
+            save_fn = cls.from_pil
+        return save_fn(Image.fromarray(arr))
 
     def write(self, b=sys.stdout.buffer):
         args = {}
