@@ -142,7 +142,8 @@ class ImageEsc(FileEsc):
 
         Allowed array shapes and data types:
 
-            * Arrays must have dtype `np.uint8`. The range of values is 0–255.
+            * Arrays must have dtype uint8 (range 0-255) or float[16, 32, 64,
+                128] (range 0-1).
 
             * Arrays must either be 2D or 3D. 2D arrays correspond to grayscale
                 images, and (most) 3D arrays to color.
