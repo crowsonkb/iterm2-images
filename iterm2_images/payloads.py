@@ -26,6 +26,13 @@ class BytesLenRepr(bytes):
         return f'<{len(self)} bytes>'
 
 
+try:
+    import prettyprinter
+    prettyprinter.register_pretty(BytesLenRepr)(lambda value, ctx: repr(value))
+except ImportError:
+    pass
+
+
 @dataclass
 class FileEsc:
     """Generates escape sequences for a file transfer."""
