@@ -143,10 +143,12 @@ class ImageEsc(FileEsc):
         Allowed array shapes and data types:
 
             * Arrays must have dtype uint8 (range 0-255) or float[16, 32, 64,
-                128] (range 0-1).
+                128] (range 0-1). Floating point arrays are converted to uint8
+                internally: values outside the 0-1 range are clipped while those
+                inside are rescaled to lie between 0-255.
 
-            * Arrays must either be 2D or 3D. 2D arrays correspond to grayscale
-                images, and (most) 3D arrays to color.
+            * Arrays must either be 2D or 3D. 2D arrays correspond to images
+                with one channel (grayscale with no alpha).
 
             * 3D arrays must follow the dimension order HWC (channels last).
 
