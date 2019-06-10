@@ -19,15 +19,23 @@ from PIL import Image
 __all__ = ['FileEsc', 'ImageLenUnit', 'ImageDim', 'ImageEsc']
 
 
+class BytesLenRepr(bytes):
+    """A :class:`bytes` subclass whose :func:`repr` only displays its length."""
+
+    def __repr__(self):
+        return f'<{len(self)} bytes>'
+
+
 @dataclass
 class FileEsc:
     """Generates escape sequences for a file transfer."""
-    data: ByteString = field(default=b'', repr=False)
+    data: ByteString = BytesLenRepr()
     name: Optional[str] = None
 
     def __post_init__(self):
         if not isinstance(self.data, ByteString):
             raise TypeError("'data' field must be a bytes-like object")
+        self.data = BytesLenRepr(self.data)
 
     @classmethod
     def open(cls, path):
