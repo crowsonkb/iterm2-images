@@ -144,11 +144,11 @@ class ImageEsc(FileEsc):
     def from_numpy(cls, arr, *, save_params=None):
         """Creates a new :class:`ImageEsc` containing an image from a NumPy
         array, saved to it by Pillow (via :meth:`from_pil`). By default it
-        creates PNG format images; if you want to customize this, items in the
+        creates PNG format images; if you want to customize this, options in the
         `save_params` dict will be passed on to :meth:`from_pil` and thus to
         :meth:`PIL.Image.save`.
 
-        Allowed array shapes and data types:
+        Allowed input array shapes and data types; usage notes:
 
             * Arrays must have dtype uint8 (range 0-255) or float[16, 32, 64,
                 128] (range 0-1). Floating point arrays are converted to uint8
@@ -163,6 +163,10 @@ class ImageEsc(FileEsc):
             * 3D arrays may have 1 to 4 channels. 3D arrays with 1 channel are
                 grayscale; with 2 channels, grayscale with alpha; with 3
                 channels, RGB; with 4 channels, RGB with alpha.
+
+            * Images are assumed to use the sRGB color space implicitly
+                (untagged), unless you explicitly do something else with options
+                supplied to :meth:`PIL.Image.save`.
         """
         if 'numpy' not in sys.modules:
             raise ImportError('numpy is not imported')
